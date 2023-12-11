@@ -31,10 +31,15 @@ for ($i = 2; $i < count($char_list); $i++) {
 		continue;
 	}
 	
-	$key = $char_list[$i-2] . $char_list[$i-1] . $char_list[$i];
-	if (array_key_exists($key, $char_map)) {
-		$new_string .= $char_map[$key];
-	}
+	if ($char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'one') $new_string .= "1";
+	if ($char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'two') $new_string .= "2";
+	if ($char_list[$i-4] . $char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'three') $new_string .= "3";
+	if ($char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'four') $new_string .= "4";
+	if ($char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'five') $new_string .= "5";
+	if ($char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'six') $new_string .= "6";
+	if ($char_list[$i-4] . $char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'seven') $new_string .= "7";
+	if ($char_list[$i-4] . $char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'eight') $new_string .= "8";
+	if ($char_list[$i-3] . $char_list[$i-2] . $char_list[$i-1] . $char_list[$i] === 'nine') $new_string .= "9";
 	
 	// CR is code 13
 	// LF is code 10
