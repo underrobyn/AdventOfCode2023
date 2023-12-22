@@ -12,7 +12,7 @@ function parseScratchcardsFromInput(string $fileName): array {
 		$cleanLine = trim($cardLine);
 		
 		$cardParts = explode(":", $cleanLine);
-		$cardId = substr($cardParts[0], 5); // Remove "Card "
+		$cardId = trim(substr($cardParts[0], 5)); // Remove "Card "
 		
 		$cardPartition = explode("|", $cardParts[1]);
 		
