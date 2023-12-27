@@ -1,5 +1,7 @@
 <?php
 
+use drupol\phpermutations\Iterators\Combinations;
+
 $lines = file('input.txt');
 
 require_once 'shared.php';
@@ -17,8 +19,18 @@ $space->findGalaxies();
 // $space->findDistance(8,9);
 
 $galaxies = $space->getGalaxyList();
+$galaxyIDs = array_keys($galaxies);
+print_r($galaxyIDs);
 
-$galaxyComb = new \drupol\phpermutations\Generators\Combinations($galaxies, 2);
-foreach ($galaxyComb->generator() as $c) {
-	print_r($c);
+$galaxyCombinations = (new Combinations($galaxyIDs, 2))->toArray();
+$combinationCount = count($galaxyCombinations);
+
+print("There are $combinationCount combinations of galaxy visits");
+
+$totalDist = 0;
+foreach ($galaxyCombinations as $combination) {
+	$dist = $space->findDistance($combination[0], $combination[1]);
+	$totalDist += $dist;
+	print("{$combination[0]}, {$combination[1]} -> $dist\n");
 }
+print_r($totalDist);
