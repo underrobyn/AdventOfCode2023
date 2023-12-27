@@ -1,25 +1,28 @@
 <?php
 
-const DEBUG = true;
+const DEBUG = false;
 const SPACE = ".";
 const GALAXY = "#";
 
 class Space {
 
 	private array $internalMatrix;
+	private array $galaxies;
 	private int $spaceRows;
 	private int $spaceCols;
 
 	public function __construct($matrix) {
 		$this->internalMatrix = $matrix;
+		$this->galaxies = array();
 
 		$this->spaceRows = count($this->internalMatrix);
 		$this->spaceCols = count($this->internalMatrix[0]);
 
-		$this->expandSpace();
-		$this->show();
-
 		return $this;
+	}
+
+	public function galaxyString(): string {
+		return implode('', array_map('implode', $this->internalMatrix));
 	}
 
 	public function get($x, $y) {
@@ -31,14 +34,15 @@ class Space {
 		return $this->internalMatrix[$x][$y];
 	}
 
-	public function show() {
+	public function show(): void {
 		$show = "Space has {$this->spaceRows} rows, {$this->spaceCols} columns.\n";
 		foreach ($this->internalMatrix as $row){
 			$show .= implode("", $row) . "\n";
 		}
 		echo "$show\n";
 	}
-	public function showSelection($x, $y) {
+
+	public function showSelection($x, $y): void {
 		$show = "\tSpace has {$this->spaceRows} rows, {$this->spaceCols} columns.\n";
 		$show .= "\t\tShowing: $x, $y: '" . $this->get($x, $y) . "'\n\t";
 		for ($i = 0; $i < $this->spaceCols; $i++) {
@@ -54,8 +58,8 @@ class Space {
 		echo "$show\n";
 	}
 
-	private function expandSpace() {
-		return $this->expandSpaceRows()->expandSpaceCols();
+	public function expandSpace(): void {
+		$this->expandSpaceRows()->expandSpaceCols();
 	}
 
 	private function expandSpaceRows(): Space {
@@ -64,8 +68,7 @@ class Space {
 			if (DEBUG) print("> searching row {$i}\n");
 
 			for ($j = 0; $j < $this->spaceCols; $j++) {
-				$v = $this->get($i, $j);
-				if ($v === GALAXY) {
+				if ($this->get($i, $j) === GALAXY) {
 					if (DEBUG) print("\n>> found galaxy on row $i\n\n");
 					$expandRow = false;
 					break;
@@ -93,9 +96,7 @@ class Space {
 			if (DEBUG) print("> searching col {$i}\n");
 
 			for ($j = 0; $j < $this->spaceRows; $j++) {
-				$v = $this->get($j, $i);
-				print($v . "\n");
-				if ($v === GALAXY) {
+				if ($this->get($j, $i) === GALAXY) {
 					//if (DEBUG) print("\n>> found galaxy in col $i\n\n");
 					$expandCol = false;
 					break;
@@ -118,6 +119,39 @@ class Space {
 		}
 
 		return $this;
+	}
+
+	public function findGalaxies(): void {
+		$galaxy_count = count_chars($this->galaxyString())[ord('#')];
+
+		if (DEBUG) print("There are $galaxy_count galaxies in space.\n");
+
+		$galaxyNumber = 1;
+		for ($i = 0; $i < $this->spaceRows; $i++) {
+			for ($j = 0; $j < $this->spaceCols; $j++) {
+				if ($this->get($i, $j) === GALAXY) {
+					$this->galaxies[$galaxyNumber] = [$i, $j];
+					$galaxyNumber++;
+				}
+			}
+		}
+	}
+
+	public function getGalaxyList(): array {
+		return $this->galaxies;
+	}
+
+	public function findDistance($a, $b): int {
+		$posA = $this->galaxies[$a];
+		$posB = $this->galaxies[$b];
+
+		$diffX = abs($posA[0] - $posB[0]);
+		$diffY = abs($posA[1] - $posB[1]);
+		$distance = $diffX + $diffY;
+
+		print("Distance between $a and $b is ($diffX, $diffY): $distance\n");
+
+		return $distance;
 	}
 
 }
