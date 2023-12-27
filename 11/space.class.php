@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', -1);
+
 const DEBUG = false;
 const SPACE = ".";
 const GALAXY = "#";
@@ -58,11 +60,12 @@ class Space {
 		echo "$show\n";
 	}
 
-	public function expandSpace(): void {
-		$this->expandSpaceRows()->expandSpaceCols();
+	public function expandSpace(int $addIterations = 1): void {
+		$addIter = $addIterations === 1 ? 1 : $addIterations - 1;
+		$this->expandSpaceRows($addIter)->expandSpaceCols($addIter);
 	}
 
-	private function expandSpaceRows(): Space {
+	private function expandSpaceRows(int $addIterations = 1): Space {
 		for ($i = 0; $i < $this->spaceRows; $i++) {
 			$expandRow = true;
 			if (DEBUG) print("> searching row {$i}\n");
@@ -80,9 +83,11 @@ class Space {
 
 			if (DEBUG) print("\n>>> Expanding space from row $i\n");
 
-			array_splice( $this->internalMatrix, $i, 0, array( $this->internalMatrix[$i] ));
-			$this->spaceRows++;
-			$i += 1;
+			for ($r = 0; $r < $addIterations; $r++) {
+				array_splice( $this->internalMatrix, $i, 0, array( $this->internalMatrix[$i] ));
+			}
+			$this->spaceRows += $addIterations;
+			$i += $addIterations;
 
 			if (DEBUG) print(">>> Space is now {$this->spaceRows} rows incremented counter to: {$i}\n");
 		}
@@ -90,7 +95,7 @@ class Space {
 		return $this;
 	}
 
-	private function expandSpaceCols(): Space {
+	private function expandSpaceCols(int $addIterations = 1): Space {
 		for ($i = 0; $i < $this->spaceCols; $i++) {
 			$expandCol = true;
 			if (DEBUG) print("> searching col {$i}\n");
@@ -108,12 +113,16 @@ class Space {
 
 			if (DEBUG) print("\n>>> Expanding space from col $i\n");
 
-			for ($j = 0; $j < $this->spaceRows; $j++) {
-				array_splice( $this->internalMatrix[$j], $i, 0, SPACE);
+			print("Doing $addIterations iters...\n");
+			for ($c = 0; $c < $addIterations; $c++) {
+				for ($j = 0; $j < $this->spaceRows; $j++) {
+					$currentRow = &$this->internalMatrix[$j];
+					array_splice($currentRow, $i, 0, SPACE);
+				}
 			}
 
-			$this->spaceCols++;
-			$i += 1;
+			$this->spaceCols += $addIterations;
+			$i += $addIterations;
 
 			if (DEBUG) print(">>> Space is now {$this->spaceCols} cols incremented counter to: {$i}\n");
 		}
