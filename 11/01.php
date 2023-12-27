@@ -4,6 +4,7 @@ $lines = file('input.txt');
 
 require_once 'shared.php';
 require_once 'space.class.php';
+require_once '../vendor/autoload.php';
 
 $matrix = makeMatrixFromFile($lines);
 $space = new Space($matrix);
@@ -17,3 +18,7 @@ $space->findGalaxies();
 
 $galaxies = $space->getGalaxyList();
 
+$galaxyComb = new \drupol\phpermutations\Generators\Combinations($galaxies, 2);
+foreach ($galaxyComb->generator() as $c) {
+	print_r($c);
+}

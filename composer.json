@@ -1,0 +1,5 @@
+{
+    "require": {
+        "drupol/phpermutations": "^1.4"
+    }
+}
