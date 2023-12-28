@@ -21,7 +21,7 @@ for ($i = 2; $i < count($lines); $i++) {
 $length = strlen($instructions);
 $index = 0;
 $elementsVisited = 0;
-$currentKey = array_keys($mapping)[0];
+$currentKey = "AAA";
 
 while (true) {
 	$instruction = $instructions[$index] === "L" ? 0 : 1;
@@ -29,7 +29,7 @@ while (true) {
 	$elementsVisited++;
 	$currentKey = $mapping[$currentKey][$instruction];
 
-	//if (!($elementsVisited % 1_000_000)) print("$elementsVisited: Took path $instruction and got $currentKey\n");
+	print("$elementsVisited: Took path $instruction and got $currentKey\n");
 	if ($currentKey === "ZZZ") break;
 }
 
